@@ -6,8 +6,8 @@ import { useState } from 'react';
 
 export default function ProfilePage() {
   const auth = getAuth();
-  const [dispName, setDispName] = useState(auth.currentUser.displayName);
-  const [phUrl, setPhUrl] = useState(auth.currentUser.photoURL);
+  const [dispName, setDispName] = useState(auth.currentUser?.displayName);
+  const [phUrl, setPhUrl] = useState(auth.currentUser?.photoURL);
   const [updateHappened, setUpdateHappened] = useState(false);
 
   function enterDispName(event) {
@@ -52,8 +52,8 @@ export default function ProfilePage() {
   return (
     <div className='container'>
       <h1>ProfilePage</h1>
-      <h2>{auth.currentUser.displayName}</h2>
-      <img src={auth.currentUser.photoURL} alt='Profile image' />
+      <h2>{auth.currentUser?.displayName}</h2>
+      <img src={auth.currentUser?.photoURL} alt='Profile image' />
       <p>Welcome to Your own space</p>
 
       <p>

@@ -8,9 +8,9 @@ const AuthContext = createContext({
 });
 
 export default function AuthProvider(props) {
-  const [fireUser, setFireUser] = useState({});
+  const [fireUser, setFireUser] = useState(auth.currentUser);
 
-  const userEmail = fireUser.email;
+  const userEmail = fireUser?.email;
   let isLoggedIn = userEmail ? true : false;
   isLoggedIn = !!userEmail;
 
