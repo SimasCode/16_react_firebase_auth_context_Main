@@ -22,7 +22,7 @@ export default function AuthProvider(props) {
         const uid = user.uid;
         // ...
         console.log('Prisijungta');
-        console.log('user ===', user);
+        // console.log('user ===', user);
         setFireUser(user);
       } else {
         // User is signed out
