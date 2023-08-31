@@ -1,0 +1,20 @@
+.header {
+  background-color: #333;
+  color: #fff;
+  .logo {
+    font-size: 30px;
+    padding: 10px 0;
+  }
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .navLink {
+    padding: 0.3em 1em;
+    display: inline-block;
+  }
+  .navLink:hover {
+    background-color: #484848;
+  }
+}
