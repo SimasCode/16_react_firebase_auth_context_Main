@@ -17,6 +17,7 @@ export default function Header() {
       })
       .catch((error) => {
         // An error happened.
+        console.log('Header - error ===', error);
       });
   }
 
@@ -37,6 +38,9 @@ export default function Header() {
           )}
           <NavLink className={'navLink'} to={'/todos'}>
             Todos
+          </NavLink>
+          <NavLink className={'navLink'} to={'/books'}>
+            Books
           </NavLink>
           {!isLoggedIn && (
             <NavLink className={'navLink'} to={'/login'}>

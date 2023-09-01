@@ -1,39 +1,104 @@
-import { collection, getDocs } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+} from 'firebase/firestore';
 import { db } from '../firebase/firebase';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import './TodoPage.module.scss';
 
 export default function TodoPage() {
-  const [bookArr, setBookArr] = useState([]);
-  async function getBooksFb() {
-    console.log('lets get some books');
+  const [todoArr, setTodoArr] = useState([]);
+  const [todoValue, setTodoValue] = useState('');
 
-    const querySnapshot = await getDocs(collection(db, 'books'));
-    console.log('querySnapshot ===', querySnapshot);
-    const dataBack = [];
+  const initTodos = [
+    { title: 'Buy Eggs', done: false, date: '' },
+    { title: 'Go to Shopping', done: true, date: '' },
+    { title: 'Do a 100 pushups', done: false, date: '' },
+  ];
+
+  //READ firebase https://firebase.google.com/docs/firestore/quickstart?hl=en&authuser=1#read_data
+
+  async function getTodosFromFireBase() {
+    const querySnapshot = await getDocs(collection(db, 'todos'));
+    const dataBackFromDb = [];
     querySnapshot.forEach((doc) => {
-      console.log(`${doc.id} => `);
-      //   console.log('doc.data() ===', doc.data());
-      //   const singleBookObj = doc.data();
-      //   singleBookObj.id = doc.id;
-      const singleBookObj = { id: doc.id, ...doc.data() };
-      console.log('singleBookObj ===', singleBookObj);
-      dataBack.push(singleBookObj);
+      //   console.log(`${doc.id} => ${doc.data()}`);
+      const singleTodoObj = {
+        id: doc.id,
+        ...doc.data(),
+      };
+      dataBackFromDb.push(singleTodoObj);
     });
-    console.log('dataBack ===', dataBack);
-    setBookArr(dataBack);
+    setTodoArr(dataBackFromDb);
+  }
+
+  useEffect(() => {
+    getTodosFromFireBase();
+  }, []);
+
+  async function createBook() {
+    console.log('creating');
+    try {
+      const docRef = await addDoc(collection(db, 'todos'), initTodos[2]);
+      console.log('Document written with ID: ', docRef.id);
+      getTodosFromFireBase();
+    } catch (e) {
+      console.error('Error adding document: ', e);
+    }
+  }
+
+  async function handleDelete(idForDelete) {
+    // await deleteDoc(doc(db, "kolekcija", "dokumento id"));
+    try {
+      await deleteDoc(doc(db, 'todos', idForDelete));
+      getTodosFromFireBase();
+    } catch (error) {
+      // nesekme
+      console.warn('handleDelete error ===', error);
+    }
+  }
+
+  /**
+   *
+   * @param {SubmitEvent} event
+   */
+  function handleSubmit(event) {
+    event.preventDefault();
+  }
+
+  function todoInput(event) {
+    setTodoValue(event.target.value);
+    console.log('event.target.value ===', event.target.value);
+  }
+
+  async function newTodoCreate() {
+    try {
+      const docRef = await addDoc(collection(db, 'todos'), {
+        title: todoValue,
+        done: false,
+      });
+      console.log('Document written with ID: ', docRef.id);
+      getTodosFromFireBase();
+    } catch (error) {
+      console.error('Error adding document: ', error);
+    }
   }
 
   return (
-    <div className='container'>
-      <h1>todo Page</h1>
-      <p>make your todos</p>
-      <div>
-        <button onClick={getBooksFb}>get books data</button>
-      </div>
-      <ul>
-        {bookArr.map((bObj) => (
-          <li key={bObj.id}>
-            title: {bObj.title}, author: {bObj.author}, year: {bObj.year}.
+    <div>
+      <button onClick={createBook}>New todo</button>
+      <form onSubmit={handleSubmit}>
+        <input onChange={todoInput} type='text' placeholder='Enter todo' />
+        <button onClick={newTodoCreate}>Submit</button>
+      </form>
+      <ul className=''>
+        {todoArr.map((todoObj) => (
+          <li className='flexItem' key={todoObj.id}>
+            <p>{todoObj.title}</p>
+            <button onClick={() => handleDelete(todoObj.id)}>Remove</button>
           </li>
         ))}
       </ul>
