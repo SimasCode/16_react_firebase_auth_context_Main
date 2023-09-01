@@ -9,6 +9,7 @@ import {
 import { db } from '../firebase/firebase';
 import { useEffect, useState } from 'react';
 import { BsCircle } from 'react-icons/bs';
+import { FiEdit } from 'react-icons/fi';
 import { AiFillCheckCircle, AiFillDelete } from 'react-icons/ai';
 import './Todo.css';
 
@@ -163,6 +164,9 @@ export default function TodoPage() {
               onClick={() => handleDelete(todoObj.id)}
             >
               <AiFillDelete />
+            </button>
+            <button>
+              <FiEdit />
             </button>
           </li>
         ))}
