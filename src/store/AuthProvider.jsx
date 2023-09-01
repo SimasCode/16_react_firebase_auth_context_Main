@@ -10,9 +10,11 @@ const AuthContext = createContext({
 export default function AuthProvider(props) {
   const [fireUser, setFireUser] = useState(auth.currentUser);
 
+  // pasiimti reiksme is localstorage
+  const accToken = localStorage.getItem('fbToken');
   const userEmail = fireUser?.email;
   let isLoggedIn = userEmail ? true : false;
-  isLoggedIn = !!userEmail;
+  isLoggedIn = !!accToken;
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -22,13 +24,15 @@ export default function AuthProvider(props) {
         const uid = user.uid;
         // ...
         console.log('Prisijungta');
-        // console.log('user ===', user);
+        console.log('user ===', user);
         setFireUser(user);
+        localStorage.setItem('fbToken', user.accessToken);
       } else {
         // User is signed out
         // ...
         console.log('Atsijungta');
         setFireUser({});
+        localStorage.removeItem('fbToken');
       }
     });
   }, []);

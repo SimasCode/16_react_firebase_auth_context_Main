@@ -81,3 +81,15 @@ button {
 .tac {
   text-align: center;
 }
+
+.unlisted {
+  list-style: none;
+  padding-left: 0;
+}
+
+.gap-10 {
+  gap: 10px;
+}
+.mb-10 {
+  margin-bottom: 10px;
+}
