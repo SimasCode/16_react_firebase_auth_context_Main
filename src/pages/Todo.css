@@ -3,6 +3,7 @@
   border: 1px solid #a9a9a9;
   padding: 0.3em 0.6em;
   display: flex;
+  cursor: pointer;
 }
 
 .deleteBnt {
@@ -10,4 +11,9 @@
   border-radius: 2px;
   padding: 0.1em 0.4em;
   color: tomato;
+}
+
+.doneItem {
+  color: gray;
+  text-decoration: line-through;
 }

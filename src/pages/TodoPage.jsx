@@ -4,6 +4,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  updateDoc,
 } from 'firebase/firestore';
 import { db } from '../firebase/firebase';
 import { useEffect, useState } from 'react';
@@ -97,16 +98,49 @@ export default function TodoPage() {
       });
       console.log('Document written with ID: ', docRef.id);
       getTodosFromFireBase();
+      setTodoValue(''); // turi isvalyti reikme po ivedimo, bet neveikia !!!!!
     } catch (error) {
       console.error('Error adding document: ', error);
     }
+  }
+
+  function handleEnterKey(event) {
+    console.log('enter yvyko', event);
+    if (event.key === 'Enter') {
+      console.log('enter buvo paspaustas');
+      newTodoCreate();
+    }
+  }
+
+  async function handleToggleDone(idToEdit) {
+    console.log('idToEdit ===', idToEdit);
+
+    const todoEdit = doc(db, 'todos', idToEdit);
+    const todoObjClick = todoArr.find((todoObj) => todoObj.id === idToEdit);
+    console.log('todoObjClick ===', todoObjClick);
+
+    const doneReiksme = todoObjClick.done;
+    try {
+      await updateDoc(todoEdit, {
+        done: !doneReiksme, // gauti elemento kuris turi id idToEdit done reiksme
+      });
+      getTodosFromFireBase();
+    } catch (error) {
+      console.log('handleToggleDone Error ===', error);
+    }
+    // Set the "capital" field of the city 'DC'
   }
 
   return (
     <div>
       <button onClick={createBook}>New todo</button>
       <form onSubmit={handleSubmit}>
-        <input onChange={todoInput} type='text' placeholder='Enter todo' />
+        <input
+          onKeyUp={handleEnterKey}
+          onChange={todoInput}
+          type='text'
+          placeholder='Enter todo'
+        />
         <button onClick={newTodoCreate}>Submit</button>
       </form>
       <ul className='unlisted'>
@@ -117,7 +151,12 @@ export default function TodoPage() {
             ) : (
               <AiFillCheckCircle size={20} />
             )}
-            <p>{todoObj.title}</p>
+            <span
+              onClick={() => handleToggleDone(todoObj.id)}
+              className={todoObj.done ? 'doneItem' : ''}
+            >
+              {todoObj.title}
+            </span>
 
             <button
               className='deleteBtn'
